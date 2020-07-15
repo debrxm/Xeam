@@ -1,0 +1,69 @@
+$tablet: 850px;
+$smartphone: 500px;
+$primaryColor: #00ffa9;
+$redColor: #ff0000;
+$secondaryColor: #ffffff;
+
+// Mixin
+@mixin tablet {
+  @media (max-width: #{$tablet}) {
+    @content;
+  }
+}
+
+@mixin smartphone {
+  @media (max-width: #{$smartphone}) {
+    @content;
+  }
+}
+.homepage {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 100% !important;
+  .background {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: darken($color: $secondaryColor, $amount: 100);
+    z-index: -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    h1 {
+      color: $primaryColor;
+    }
+  }
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    box-shadow: 0px 0px 5px 0px $primaryColor;
+    border-radius: 1em;
+    padding: 1.5em;
+    bottom: 3em;
+    .google {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      span {
+        font-size: 1.4em;
+        margin-right: 1em;
+      }
+      h4 {
+        font-size: 1em;
+      }
+    }
+    .register,
+    .login {
+      margin: 0.5em 0;
+    }
+    .register {
+      margin-top: 2em;
+    }
+  }
+}
