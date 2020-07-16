@@ -58,6 +58,10 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
         displayName,
         email,
         joined,
+        friends: [],
+        posts: [],
+        cover: '',
+        profile_pic: '',
         ...additionalData,
       });
     } catch (error) {

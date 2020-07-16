@@ -17,6 +17,9 @@ import EditMe from './pages/EditMe/EditMe';
 import './App.scss';
 import LoginPage from './pages/Login/Login';
 import RegisterPage from './pages/Register/Register';
+import FriendPosts from './pages/FriendPosts/FriendPosts';
+import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer';
 
 class App extends React.Component {
   state = {
@@ -56,7 +59,7 @@ class App extends React.Component {
           '/register' ? null : (
           <div className="showing">
             <div className="desktop">
-              <header>Header</header>
+              <Header />
             </div>
           </div>
         )}
@@ -71,7 +74,11 @@ class App extends React.Component {
             <Spinner />
           ) : (
             <Switch>
-              <Route exact path="/me" component={Me} />
+              <Route
+                exact
+                path="/me"
+                render={() => (currentUser ? <Me /> : <Redirect to="/login" />)}
+              />
               <Route
                 exact
                 path="/edit-me"
@@ -79,8 +86,26 @@ class App extends React.Component {
                   currentUser ? <EditMe /> : <Redirect to="/me" />
                 }
               />
-              <Route path="/login" component={LoginPage} />
-              <Route path="/register" component={RegisterPage} />
+              <Route
+                exact
+                path="/home"
+                render={() =>
+                  currentUser ? <FriendPosts /> : <Redirect to="/login" />
+                }
+              />
+
+              <Route
+                path="/login"
+                render={() =>
+                  currentUser ? <Redirect to="/home" /> : <LoginPage />
+                }
+              />
+              <Route
+                path="/register"
+                render={() =>
+                  currentUser ? <Redirect to="/home" /> : <RegisterPage />
+                }
+              />
               <Route path="/" component={Home} />
             </Switch>
           )}
@@ -91,7 +116,7 @@ class App extends React.Component {
           '/notfound' ? null : history.location.pathname ===
           '/user-profile' ? null : history.location.pathname ===
           '/messages' ? null : (
-          <footer>FOOTER</footer>
+          <Footer />
         )}
       </div>
     );

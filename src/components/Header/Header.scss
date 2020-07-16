@@ -1,0 +1,36 @@
+$tablet: 850px;
+$smartphone: 500px;
+$primaryColor: #00ffa9;
+$redColor: #ff0000;
+$secondaryColor: #ffffff;
+$shadow: 0px 0px 5px 0px $primaryColor;
+
+// Mixin
+@mixin tablet {
+  @media (max-width: #{$tablet}) {
+    @content;
+  }
+}
+
+@mixin smartphone {
+  @media (max-width: #{$smartphone}) {
+    @content;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em 5%;
+  height: 70px;
+  border-bottom: 0.1em solid $primaryColor;
+  .brand {
+    font-size: 1.6em;
+  }
+  a {
+    img {
+      height: 2em;
+    }
+  }
+}
