@@ -1,14 +1,14 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
-import { Link } from 'react-router-dom';
-import home from '../../assets/home.svg';
-import addFriend from '../../assets/user-plus.svg';
-import plus from '../../assets/plus.svg';
-import bell from '../../assets/bell.svg';
-import userIcon from '../../assets/user.svg';
-import { selectCurrentUser } from '../../redux/user/user.selectors';
-import './Footer.scss';
+import React from "react";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+import { Link } from "react-router-dom";
+import home from "../../assets/home.svg";
+import addFriend from "../../assets/user-plus.svg";
+import plus from "../../assets/plus.svg";
+import bell from "../../assets/bell.svg";
+import userIcon from "../../assets/user.svg";
+import { selectCurrentUser } from "../../redux/user/user.selectors";
+import "./Footer.scss";
 const Footer = ({ currentUser }) => {
   return (
     <footer className="footer">
@@ -26,7 +26,11 @@ const Footer = ({ currentUser }) => {
           <img src={bell} alt="" />
         </Link>
         <Link to="/me">
-          <img className="user-prof" src={userIcon} alt="user icon" />
+          <img
+            className="user-prof"
+            src={currentUser && currentUser.profile_pic}
+            alt="user icon"
+          />
         </Link>
       </div>
     </footer>

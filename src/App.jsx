@@ -1,25 +1,25 @@
-import React from 'react';
-import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
-import { auth, createUserProfileDocument } from './firebase/firebase.utils';
-import { setCurrentUser } from './redux/user/user.actions';
-import { selectCurrentUser } from './redux/user/user.selectors';
+import React from "react";
+import { Switch, Route, Redirect, withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
+import { setCurrentUser } from "./redux/user/user.actions";
+import { selectCurrentUser } from "./redux/user/user.selectors";
 // import Header from './components/Header/Header';
 // import Footer from './components/Footer/Footer';
-import Spinner from './components/Spinner/Spinner';
+import Spinner from "./components/Spinner/Spinner";
 /*==============================*/
 /*PAGES*/
 /*==============================*/
-import Home from './pages/Home/Home';
-import Me from './pages/Me/Me';
-import EditMe from './pages/EditMe/EditMe';
-import './App.scss';
-import LoginPage from './pages/Login/Login';
-import RegisterPage from './pages/Register/Register';
-import FriendPosts from './pages/FriendPosts/FriendPosts';
-import Header from './components/Header/Header';
-import Footer from './components/Footer/Footer';
+import Home from "./pages/Home/Home";
+import Me from "./pages/Me/Me";
+import EditMe from "./pages/EditMe/EditMe";
+import "./App.scss";
+import LoginPage from "./pages/Login/Login";
+import RegisterPage from "./pages/Register/Register";
+import FriendPosts from "./pages/FriendPosts/FriendPosts";
+import Header from "./components/Header/Header";
+import Footer from "./components/Footer/Footer";
 
 class App extends React.Component {
   state = {
@@ -53,10 +53,10 @@ class App extends React.Component {
     const { currentUser, history } = this.props;
     return (
       <div className="App">
-        {history.location.pathname === '/' ? null : history.location
-            .pathname === '/login' ? null : history.location.pathname ===
-          '/notfound' ? null : history.location.pathname ===
-          '/register' ? null : (
+        {history.location.pathname === "/" ? null : history.location
+            .pathname === "/login" ? null : history.location.pathname ===
+          "/notfound" ? null : history.location.pathname ===
+          "/register" ? null : (
           <div className="showing">
             <div className="desktop">
               <Header />
@@ -65,9 +65,9 @@ class App extends React.Component {
         )}
         <div
           className={`${
-            history.location.pathname === '/messages'
-              ? 'message-wrapper'
-              : 'wrapper'
+            history.location.pathname === "/messages"
+              ? "message-wrapper"
+              : "wrapper"
           } `}
         >
           {this.state.isLoading ? (
@@ -106,16 +106,21 @@ class App extends React.Component {
                   currentUser ? <Redirect to="/home" /> : <RegisterPage />
                 }
               />
-              <Route path="/" component={Home} />
+              <Route
+                path="/"
+                render={() =>
+                  currentUser ? <Redirect to="/home" /> : <Home />
+                }
+              />
             </Switch>
           )}
         </div>
-        {history.location.pathname === '/' ? null : history.location
-            .pathname === '/login' ? null : history.location.pathname ===
-          '/register' ? null : history.location.pathname ===
-          '/notfound' ? null : history.location.pathname ===
-          '/user-profile' ? null : history.location.pathname ===
-          '/messages' ? null : (
+        {history.location.pathname === "/" ? null : history.location
+            .pathname === "/login" ? null : history.location.pathname ===
+          "/register" ? null : history.location.pathname ===
+          "/notfound" ? null : history.location.pathname ===
+          "/user-profile" ? null : history.location.pathname ===
+          "/messages" ? null : (
           <Footer />
         )}
       </div>
