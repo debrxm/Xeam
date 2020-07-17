@@ -1,67 +1,61 @@
-import React from 'react';
-import firebase from 'firebase/app';
-import { Link, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
-import { selectCurrentUser } from '../../redux/user/user.selectors';
-import { updateProfile } from '../../firebase/firebase.utils';
-import cancel from '../../assets/cancel.svg';
-import cam from '../../assets/cam.svg';
-import FormInput from '../../components/FormInput/FormInput';
-import Spinner from '../../components/Spinner/Spinner';
-import './EditMe.scss';
+import React from "react";
+import firebase from "firebase/app";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+import { selectCurrentUser } from "../../redux/user/user.selectors";
+import { updateProfile } from "../../firebase/firebase.utils";
+import glob from "../../assets/global.svg";
+import bioIcon from "../../assets/bio.svg";
+import nameIcon from "../../assets/name.svg";
+import camera from "../../assets/camera.svg";
+import FormInput from "../../components/FormInput/FormInput";
+import Spinner from "../../components/Spinner/Spinner";
+import "./EditMe.scss";
 class EditProfile extends React.Component {
   state = {
-    fullName: '',
-    bio: '',
-    website: '',
-    pp: '',
-    cover: '',
-    location: '',
+    fullName: "",
+    bio: "",
+    website: "",
+    pp: "",
     isLoading: false,
+    isChanged: false,
   };
   componentDidMount() {
     this.setState({
       fullName: this.props.currentUser.displayName
         ? this.props.currentUser.displayName
-        : '',
-      bio: this.props.currentUser.bio ? this.props.currentUser.bio : '',
+        : "",
+      bio: this.props.currentUser.bio ? this.props.currentUser.bio : "",
       website: this.props.currentUser.website
         ? this.props.currentUser.website
-        : '',
-      cover: this.props.currentUser.cover ? this.props.currentUser.cover : '',
+        : "",
       pp: this.props.currentUser.profile_pic
         ? this.props.currentUser.profile_pic
-        : '',
+        : "",
     });
   }
 
-  handleCoverChange = async (e) => {
-    this.setState({ isLoading: true });
-    const selectedFile = e.target.files[0];
-    this.fetchImageUrl(selectedFile, 'cover', 'cover');
-  };
-
   handlePpChange = async (e) => {
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, isChanged: true });
     const selectedFile = e.target.files[0];
-    this.fetchImageUrl(selectedFile, 'profile-pic', 'pp');
+    this.fetchImageUrl(selectedFile, "profile-pic");
   };
 
-  fetchImageUrl = async (selectedFile, dest, sta) => {
+  fetchImageUrl = async (selectedFile, dest) => {
     const storageRef = firebase
       .storage()
       .ref(`users/${this.props.currentUser.id}/${dest}/${selectedFile}`);
     const uploadTask = storageRef.put(selectedFile);
     uploadTask.on(
-      'state_changed',
+      "state_changed",
       (snapshot) => {
         switch (snapshot.state) {
           case firebase.storage.TaskState.PAUSED:
-            console.log('Upload is paused');
+            console.log("Upload is paused");
             break;
           case firebase.storage.TaskState.RUNNING:
-            console.log('Upload is running');
+            console.log("Upload is running");
             break;
           default:
             return;
@@ -73,9 +67,7 @@ class EditProfile extends React.Component {
       () => {
         // get the uploaded image url back
         uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-          sta === 'pp'
-            ? this.setState({ pp: downloadURL })
-            : this.setState({ cover: downloadURL });
+          this.setState({ pp: downloadURL });
         });
       }
     );
@@ -83,56 +75,33 @@ class EditProfile extends React.Component {
   };
   handleChange = (e) => {
     const { name, value } = e.target;
-    this.setState({ [name]: value });
+    this.setState({ [name]: value, isChanged: true });
   };
   handleSave = async () => {
-    const { fullName, bio, website, location, pp, cover } = this.state;
+    const { fullName, bio, website, location, pp } = this.state;
     const incomingData = {
       fullName,
       bio,
       website,
-      cover,
       profile_pic: pp,
-      location,
     };
     await updateProfile(this.props.currentUser.id, incomingData);
-    this.props.history.push('/me');
+    this.props.history.push("/me");
   };
   render() {
     const { currentUser } = this.props;
-    const { fullName, bio, website, pp, cover } = this.state;
+    const { fullName, bio, website, pp } = this.state;
     return (
       <div className="profile-edit-page main">
         {currentUser ? (
           <div className="profile-edit">
             <div className="profile-edit-page-header">
               <div className="edit-control">
-                <div className="cancel_title">
-                  <Link to="/me">
-                    <img src={cancel} alt="cancel icon" />
-                  </Link>
-                  <span>Edit Profile</span>
-                </div>
-                <span className="save" onClick={this.handleSave}>
-                  Save
-                </span>
-              </div>
-              <div className="profile-page-header-image">
-                <div className="cover-container">
-                  <img className="cover-image" src={cover} alt="cover" />
-                </div>
-                <div className="ctrls">
-                  <div className="upload-btn-wrapper">
-                    <img src={cam} alt="upload icon" />
-                    <input
-                      type="file"
-                      name="cover"
-                      accept="image/gif, image/jpeg, image/png"
-                      onChange={this.handleCoverChange}
-                    />
-                  </div>
-                  <img src={cancel} alt="cancel icon" />
-                </div>
+                {this.state.isChanged && (
+                  <span className="Update" onClick={this.handleSave}>
+                    Save
+                  </span>
+                )}
               </div>
               <div className="profile-pic_buttons">
                 <div
@@ -143,7 +112,7 @@ class EditProfile extends React.Component {
                 >
                   <div className="pp">
                     <div className="upload-btn-wrapper">
-                      <img src={cam} alt="upload icon" />
+                      <img src={camera} alt="upload icon" />
                       <input
                         type="file"
                         name="pp"
@@ -157,30 +126,45 @@ class EditProfile extends React.Component {
               </div>
             </div>
             <form onSubmit={this.handleSave}>
-              <FormInput
-                type="text"
-                name="fullName"
-                value={fullName}
-                label="Fullname"
-                onChange={this.handleChange}
-                edit
-              />
-              <FormInput
-                type="text"
-                name="bio"
-                value={bio}
-                label="Bio"
-                onChange={this.handleChange}
-                edit
-              />
-              <FormInput
-                type="text"
-                name="website"
-                value={website}
-                label="Website"
-                onChange={this.handleChange}
-                edit
-              />
+              <div className="form-input-group">
+                <div className="icon-conatainer">
+                  <img className="padlock-icon" src={nameIcon} alt="padlock" />
+                </div>
+                <FormInput
+                  type="text"
+                  name="fullName"
+                  value={fullName}
+                  label="Fullname"
+                  onChange={this.handleChange}
+                  edit
+                />
+              </div>
+              <div className="form-input-group">
+                <div className="icon-conatainer">
+                  <img className="padlock-icon" src={bioIcon} alt="padlock" />
+                </div>
+                <FormInput
+                  type="text"
+                  name="bio"
+                  value={bio}
+                  label="Bio"
+                  onChange={this.handleChange}
+                  edit
+                />
+              </div>
+              <div className="form-input-group">
+                <div className="icon-conatainer">
+                  <img className="padlock-icon" src={glob} alt="padlock" />
+                </div>
+                <FormInput
+                  type="text"
+                  name="website"
+                  value={website}
+                  label="Website"
+                  onChange={this.handleChange}
+                  edit
+                />
+              </div>
             </form>
             {/* </>
           )} */}

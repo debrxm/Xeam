@@ -119,7 +119,7 @@ class App extends React.Component {
             .pathname === "/login" ? null : history.location.pathname ===
           "/register" ? null : history.location.pathname ===
           "/notfound" ? null : history.location.pathname ===
-          "/user-profile" ? null : history.location.pathname ===
+          "/edit-me" ? null : history.location.pathname ===
           "/messages" ? null : (
           <Footer />
         )}

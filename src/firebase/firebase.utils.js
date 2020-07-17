@@ -84,15 +84,7 @@ export const getMemberProfiles = async () => {
 };
 
 export const updateProfile = async (userId, incomingData) => {
-  const {
-    fullName,
-    bio,
-    website,
-    cover,
-    profile_pic,
-    location,
-    signature,
-  } = incomingData;
+  const { fullName, bio, website, profile_pic } = incomingData;
   const userRef = firestore.doc(`users/${userId}`);
   const snapShot = await userRef.get();
   if (snapShot.exists) {
@@ -101,10 +93,7 @@ export const updateProfile = async (userId, incomingData) => {
         displayName: fullName,
         bio,
         website,
-        cover,
         profile_pic,
-        location,
-        signature,
       });
       return userRef;
     } catch (error) {
